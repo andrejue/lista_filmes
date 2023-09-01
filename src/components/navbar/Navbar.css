@@ -1,0 +1,54 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  height: 80px;
+
+  box-shadow: inset 0px 13px 20px #f9983739;
+}
+
+.header > h2 {
+  margin-left: 2rem;
+  font-size: 1.8rem;
+}
+
+.header > h2 > a {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.header .movie__logo {
+  transform: rotate(-22deg);
+}
+
+.navbar ul {
+  display: flex;
+  gap: 2.5rem;
+
+  margin-right: 2rem;
+}
+
+.navbar > ul a {
+  font-weight: 600;
+  text-shadow: 0px 5px 10px #f9983772;
+  font-size: 1.2rem;
+
+  transition: 0.3s ease-in-out;
+}
+
+.navbar > ul a:hover {
+  font-size: 1.25rem;
+}
+
+.search {
+  align-self: center !important;
+}
+
+.third__visibility__hidden {
+  display: flex;
+  margin-right: 2rem;
+  font-weight: 700;
+}
