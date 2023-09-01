@@ -3,10 +3,10 @@ import { AiFillStar } from "react-icons/ai";
 import { FaChevronCircleLeft } from "react-icons/fa";
 import { FaChevronCircleRight } from "react-icons/fa";
 
-import "./MovieCard.scss";
+import "./SerieCard.scss";
 
-export default function MovieCard({ movies }) {
-  const shuffleMovies = (array) => {
+export default function SerieieCard({ series }) {
+  const shuffleSeries = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
@@ -24,16 +24,17 @@ export default function MovieCard({ movies }) {
     carousel.current.scrollLeft += carousel.current.offsetWidth;
   };
 
-  const shuffledMovies = shuffleMovies(movies);
+  const shuffledSeries = shuffleSeries(series);
+  console.log(shuffledSeries);
 
   const carousel = useRef(null);
 
   return (
     <div className="card__carousel__top__movies">
-      <h2 className="top__movies__title">Top Movies</h2>
+      <h2 className="top__movies__title">Top Series</h2>
       <div className="card__container" ref={carousel}>
-        {shuffledMovies.map((movie) => {
-          const { id, vote_average, poster_path, title, release_date } = movie;
+        {shuffledSeries.map((movie) => {
+          const { id, vote_average, poster_path, name, first_air_date } = movie;
 
           return (
             <div className="movie__poster" key={id}>
@@ -49,7 +50,7 @@ export default function MovieCard({ movies }) {
               />
               <div className="movie__title">
                 <h3>
-                  {title} ({release_date.substring(0, 4)})
+                  {name} ({first_air_date.substring(0, 4)})
                 </h3>
               </div>
               <div className="movie__backdrop__mini"></div>

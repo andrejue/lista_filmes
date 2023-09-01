@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import MovieCard from "../components/moviecard/MovieCard";
+import SerieieCard from "../components/seriecard/SerieCard";
 
-const url = import.meta.env.VITE_API;
+const moviesUrl = import.meta.env.VITE_API_MOVIES;
+const seriesUrl = import.meta.env.VITE_API_SERIES;
 const apiKey = import.meta.env.VITE_API_KEY;
 
 export default function Home() {
   const [bestMovies, setBestMovies] = useState([]);
+  const [bestSeries, setBestSeries] = useState([]);
 
   const getBestRatedMovies = async (url) => {
     const res = await fetch(url);
@@ -14,23 +17,31 @@ export default function Home() {
     setBestMovies(data.results);
   };
 
+  const getBestRatedSeries = async (url) => {
+    const res = await fetch(url);
+    const data = await res.json();
+
+    console.log(data);
+    setBestSeries(data.results);
+  };
+
   useEffect(() => {
-    const bestRatedUrl = `${url}popular?${apiKey}`;
+    const bestRatedMoviesUrl = `${moviesUrl}popular?${apiKey}`;
+    const bestRatedSeriesUrl = `${seriesUrl}popular?${apiKey}`;
 
-    getBestRatedMovies(bestRatedUrl);
+    getBestRatedMovies(bestRatedMoviesUrl);
+    getBestRatedSeries(bestRatedSeriesUrl);
   }, []);
-
-  console.log(bestMovies);
 
   return (
     <div>
-      <h1>Home here</h1>
-      <p>url: {url}</p>
-      <p>API key: {apiKey}</p>
-
       {bestMovies.lenght === 0 && <div>Loading movies...</div>}
 
       {bestMovies.length > 0 && <MovieCard movies={bestMovies} />}
+
+      {bestSeries.lenght === 0 && <div>Loading series...</div>}
+
+      {bestSeries.length > 0 && <SerieieCard series={bestSeries} />}
     </div>
   );
 }
