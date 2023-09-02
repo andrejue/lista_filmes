@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import MovieCard from "../moviecard/MovieCard";
 
-import { AiFillStar } from "react-icons/ai";
-
 const searchUrl = import.meta.env.VITE_SEARCH;
 const apiKey = import.meta.env.VITE_API_KEY;
 
