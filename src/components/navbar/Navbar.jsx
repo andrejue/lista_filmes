@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { BiCameraMovie } from "react-icons/bi";
-import { FaSearch } from "react-icons/fa";
 
 import "./Navbar.css";
 import "./Navbar.scss";
+import InputSearch from "../search/InputSearch";
 
 export default function Navbar() {
   return (
@@ -14,14 +14,7 @@ export default function Navbar() {
           <span className="text">MovieS</span>
         </Link>
       </h2>
-      <div className="search">
-        <form>
-          <input type="text" placeholder="Search a movie..." />
-          <button type="submit">
-            <FaSearch size={20} />
-          </button>
-        </form>
-      </div>
+      <InputSearch />
       <div className="third__visibility__hidden">
         <a href="https://github.com/andrejue" target="_blank" rel="noreferrer">
           Github Code

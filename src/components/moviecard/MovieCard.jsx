@@ -5,7 +5,7 @@ import { FaChevronCircleRight } from "react-icons/fa";
 
 import "./MovieCard.scss";
 
-export default function MovieCard({ movies }) {
+export default function MovieCard({ movies, title }) {
   const shuffleMovies = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -30,7 +30,7 @@ export default function MovieCard({ movies }) {
 
   return (
     <div className="card__carousel__top__movies">
-      <h2 className="top__movies__title">Top Movies</h2>
+      <h2 className="top__movies__title">{title}</h2>
       <div className="card__container" ref={carousel}>
         {shuffledMovies.map((movie) => {
           const { id, vote_average, poster_path, title, release_date } = movie;

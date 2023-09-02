@@ -21,7 +21,6 @@ export default function Home() {
     const res = await fetch(url);
     const data = await res.json();
 
-    console.log(data);
     setBestSeries(data.results);
   };
 
@@ -29,6 +28,7 @@ export default function Home() {
     const bestRatedMoviesUrl = `${moviesUrl}popular?${apiKey}`;
     const bestRatedSeriesUrl = `${seriesUrl}popular?${apiKey}`;
 
+    console.log(bestRatedSeriesUrl);
     getBestRatedMovies(bestRatedMoviesUrl);
     getBestRatedSeries(bestRatedSeriesUrl);
   }, []);
@@ -37,7 +37,9 @@ export default function Home() {
     <div>
       {bestMovies.lenght === 0 && <div>Loading movies...</div>}
 
-      {bestMovies.length > 0 && <MovieCard movies={bestMovies} />}
+      {bestMovies.length > 0 && (
+        <MovieCard movies={bestMovies} title="Top Movies" />
+      )}
 
       {bestSeries.lenght === 0 && <div>Loading series...</div>}
 

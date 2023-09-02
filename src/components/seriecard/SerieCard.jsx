@@ -25,13 +25,12 @@ export default function SerieieCard({ series }) {
   };
 
   const shuffledSeries = shuffleSeries(series);
-  console.log(shuffledSeries);
 
   const carousel = useRef(null);
 
   return (
     <div className="card__carousel__top__movies">
-      <h2 className="top__movies__title">Top Series</h2>
+      <h2 className="top__movies__title">Top TV Series</h2>
       <div className="card__container" ref={carousel}>
         {shuffledSeries.map((movie) => {
           const { id, vote_average, poster_path, name, first_air_date } = movie;
