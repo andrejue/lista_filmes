@@ -4,6 +4,7 @@ import Layout from "./pages/Layout";
 import "./App.css";
 import Home from "./pages/Home";
 import Search from "./components/search/Search";
+import MovieInfo from "./components/movieinfo/MovieInfo";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
       {
         path: "/search",
         element: <Search />,
+      },
+      {
+        path: "/movie/:id",
+        element: <MovieInfo />,
       },
     ],
   },

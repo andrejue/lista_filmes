@@ -4,6 +4,7 @@ import { FaChevronCircleLeft } from "react-icons/fa";
 import { FaChevronCircleRight } from "react-icons/fa";
 
 import "./MovieCard.scss";
+import { Link } from "react-router-dom";
 
 export default function MovieCard({ movies, title }) {
   const shuffleMovies = (array) => {
@@ -25,6 +26,7 @@ export default function MovieCard({ movies, title }) {
   };
 
   const shuffledMovies = shuffleMovies(movies);
+  console.log(shuffledMovies);
 
   const carousel = useRef(null);
 
@@ -36,24 +38,25 @@ export default function MovieCard({ movies, title }) {
           const { id, vote_average, poster_path, title, release_date } = movie;
 
           return (
-            <div className="movie__poster" key={id}>
-              <div className="movie__rating">
-                {vote_average}
-                <AiFillStar className="movie__rating__star" size={20} />
+            <Link key={id} to={`/movie/${id}`}>
+              <div className="movie__poster">
+                <div className="movie__rating">
+                  {vote_average}
+                  <AiFillStar className="movie__rating__star" size={20} />
+                </div>
+                <img
+                  src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
+                  alt="Movie Cover"
+                  className="movie__cover"
+                />
+                <div className="movie__title">
+                  <h3>
+                    {title} ({release_date.substring(0, 4)})
+                  </h3>
+                </div>
+                <div className="movie__backdrop__mini"></div>
               </div>
-
-              <img
-                src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
-                alt="Movie Cover"
-                className="movie__cover"
-              />
-              <div className="movie__title">
-                <h3>
-                  {title} ({release_date.substring(0, 4)})
-                </h3>
-              </div>
-              <div className="movie__backdrop__mini"></div>
-            </div>
+            </Link>
           );
         })}
       </div>
