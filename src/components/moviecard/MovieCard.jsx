@@ -26,7 +26,6 @@ export default function MovieCard({ movies, title }) {
   };
 
   const shuffledMovies = shuffleMovies(movies);
-  console.log(shuffledMovies);
 
   const carousel = useRef(null);
 
@@ -34,6 +33,7 @@ export default function MovieCard({ movies, title }) {
     <div className="card__carousel__top__movies">
       <h2 className="top__movies__title">{title}</h2>
       <div className="card__container" ref={carousel}>
+        {shuffleMovies.length === 0 && <div>Loading movies...</div>}
         {shuffledMovies.map((movie) => {
           const { id, vote_average, poster_path, title, release_date } = movie;
 
