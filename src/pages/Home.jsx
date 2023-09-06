@@ -10,6 +10,8 @@ export default function Home() {
   const [bestMovies, setBestMovies] = useState([]);
   const [bestSeries, setBestSeries] = useState([]);
 
+  console.log(bestMovies);
+
   const getBestRatedMovies = async (url) => {
     const res = await fetch(url);
     const data = await res.json();
@@ -28,13 +30,12 @@ export default function Home() {
     const bestRatedMoviesUrl = `${moviesUrl}popular?${apiKey}`;
     const bestRatedSeriesUrl = `${seriesUrl}popular?${apiKey}`;
 
-    console.log(bestRatedSeriesUrl);
     getBestRatedMovies(bestRatedMoviesUrl);
     getBestRatedSeries(bestRatedSeriesUrl);
   }, []);
 
   return (
-    <div>
+    <main>
       {bestMovies.lenght === 0 && <div>Loading movies...</div>}
 
       {bestMovies.length > 0 && (
@@ -44,6 +45,6 @@ export default function Home() {
       {bestSeries.lenght === 0 && <div>Loading series...</div>}
 
       {bestSeries.length > 0 && <SerieieCard series={bestSeries} />}
-    </div>
+    </main>
   );
 }

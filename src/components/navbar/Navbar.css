@@ -7,6 +7,11 @@
   height: 80px;
 
   box-shadow: inset 0 15px 15px #f9983739;
+
+  background-color: #000;
+
+  position: fixed;
+  z-index: 5;
 }
 
 .header > h2 {
