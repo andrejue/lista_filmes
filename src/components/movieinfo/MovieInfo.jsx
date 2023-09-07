@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { LiaImdb } from "react-icons/lia";
 
 import "./MovieInfo.scss";
 
@@ -10,14 +11,31 @@ const imgUrl = import.meta.env.VITE_IMG_ORIGINAL;
 export default function MovieInfo() {
   const { id } = useParams();
   const [movieInfo, setMovieInfo] = useState({});
+  const [movieGenre, setMovieGenre] = useState([]);
+  const [movieActors, setMovieActors] = useState([]);
   const [movieImages, setMovieImages] = useState({});
   const [movieCredits, setMovieCredits] = useState({});
 
   const getMovieInfo = async (url) => {
-    const res = await fetch(url);
-    const data = await res.json();
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
 
-    setMovieInfo(data);
+      const { genres } = data;
+      console.log(genres);
+
+      const genresDiv = genres.map((genre) => {
+        return (
+          <div className="genre" key={genre.id}>
+            {genre.name}
+          </div>
+        );
+      });
+      setMovieGenre(genresDiv);
+      setMovieInfo(data);
+    } catch (error) {
+      console.error("ERROR:", error);
+    }
   };
 
   const getMovieImages = async (url) => {
@@ -25,13 +43,9 @@ export default function MovieInfo() {
       const res = await fetch(url);
       const data = await res.json();
 
-      console.log(data.logos);
-
       const enLogos = data.logos.filter((logo) => {
         return logo.iso_639_1 === "en";
       });
-
-      console.log(enLogos);
 
       const smallestLogo = enLogos.reduce((smallest, img) => {
         return img.width < smallest.width ? img : smallest;
@@ -44,10 +58,22 @@ export default function MovieInfo() {
   };
 
   const getMovieCredits = async (url) => {
-    const res = await fetch(url);
-    const data = await res.json();
-    console.log(data);
-    setMovieCredits(data);
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      const first3ActorsArray = data.cast.slice(0, 3);
+      const first3Actors = first3ActorsArray.map((actor) => {
+        return (
+          <div className="actor" key={actor.id}>
+            {actor.name}
+          </div>
+        );
+      });
+      setMovieActors(first3Actors);
+      setMovieCredits(data);
+    } catch (error) {
+      console.error("ERROR:", error);
+    }
   };
 
   useEffect(() => {
@@ -73,6 +99,8 @@ export default function MovieInfo() {
     title,
     vote_average,
   } = movieInfo;
+  console.log(movieInfo);
+  console.log(movieCredits.cast);
 
   const { cast, crew } = movieCredits;
 
@@ -87,8 +115,20 @@ export default function MovieInfo() {
           alt="Movie Logo"
           className="movie__logo"
         />
-        <p>{release_date}</p>
-        <p>{overview}</p>
+        <div className="movie__infos">
+          <p>{runtime} min</p>
+          <p>{release_date}</p>
+          <p className="vote__average">
+            {vote_average} <LiaImdb size={30} />
+          </p>
+        </div>
+        <div className="genres">{movieGenre}</div>
+        <div className="director">Director</div>
+        <div className="cast">{movieActors}</div>
+
+        <div className="overview">
+          <p>{overview}</p>
+        </div>
       </div>
     </main>
   );
