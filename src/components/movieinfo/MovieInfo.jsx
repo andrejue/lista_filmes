@@ -10,9 +10,11 @@ const imgUrl = import.meta.env.VITE_IMG_ORIGINAL;
 
 export default function MovieInfo() {
   const { id } = useParams();
+  const [loading, setLoading] = useState(true);
   const [movieInfo, setMovieInfo] = useState({});
   const [movieGenre, setMovieGenre] = useState([]);
   const [movieActors, setMovieActors] = useState([]);
+  const [movieDirector, setMovieDirector] = useState([]);
   const [movieImages, setMovieImages] = useState({});
   const [movieCredits, setMovieCredits] = useState({});
 
@@ -33,8 +35,10 @@ export default function MovieInfo() {
       });
       setMovieGenre(genresDiv);
       setMovieInfo(data);
+      setLoading(false);
     } catch (error) {
       console.error("ERROR:", error);
+      setLoading(false);
     }
   };
 
@@ -44,7 +48,11 @@ export default function MovieInfo() {
       const data = await res.json();
 
       const enLogos = data.logos.filter((logo) => {
-        return logo.iso_639_1 === "en";
+        if (logo.iso_639_1 === null) {
+          return logo;
+        } else {
+          return logo.iso_639_1 === "en";
+        }
       });
 
       const smallestLogo = enLogos.reduce((smallest, img) => {
@@ -52,8 +60,10 @@ export default function MovieInfo() {
       });
 
       setMovieImages(smallestLogo);
+      setLoading(false);
     } catch (error) {
       console.error("ERROR:", error);
+      setLoading(false);
     }
   };
 
@@ -62,6 +72,13 @@ export default function MovieInfo() {
       const res = await fetch(url);
       const data = await res.json();
       const first3ActorsArray = data.cast.slice(0, 3);
+      const director = data.crew.filter((director) => {
+        if (director.job === "Director") {
+          return director;
+        }
+      });
+
+      console.log(director);
       const first3Actors = first3ActorsArray.map((actor) => {
         return (
           <div className="actor" key={actor.id}>
@@ -69,10 +86,13 @@ export default function MovieInfo() {
           </div>
         );
       });
+      setMovieDirector(director[0]);
       setMovieActors(first3Actors);
       setMovieCredits(data);
+      setLoading(false);
     } catch (error) {
       console.error("ERROR:", error);
+      setLoading(false);
     }
   };
 
@@ -100,36 +120,49 @@ export default function MovieInfo() {
     vote_average,
   } = movieInfo;
   console.log(movieInfo);
-  console.log(movieCredits.cast);
+  console.log(movieCredits.crew);
+  console.log(movieImages);
 
   const { cast, crew } = movieCredits;
 
   return (
-    <main
-      className="movie__info__container"
-      style={{ backgroundImage: `url(${imgUrl}${backdrop_path})` }}
-    >
-      <div className="movie__info__card">
-        <img
-          src={`https://image.tmdb.org/t/p/original/${movieImages.file_path}`}
-          alt="Movie Logo"
-          className="movie__logo"
-        />
-        <div className="movie__infos">
-          <p>{runtime} min</p>
-          <p>{release_date}</p>
-          <p className="vote__average">
-            {vote_average} <LiaImdb size={30} />
-          </p>
-        </div>
-        <div className="genres">{movieGenre}</div>
-        <div className="director">Director</div>
-        <div className="cast">{movieActors}</div>
-
-        <div className="overview">
-          <p>{overview}</p>
-        </div>
-      </div>
-    </main>
+    <>
+      {loading && <div className="loading__spinner"></div>}
+      {!loading && (
+        <main
+          className="movie__info__container"
+          style={{ backgroundImage: `url(${imgUrl}${backdrop_path})` }}
+        >
+          <div className="movie__info__card">
+            <img
+              src={`https://image.tmdb.org/t/p/original/${movieImages.file_path}`}
+              alt={`${title} Logo`}
+              className="movie__logo"
+            />
+            <div className="movie__infos">
+              <p>{runtime} min</p>
+              {release_date && <p>{release_date.substring(0, 4)}</p>}
+              {vote_average && (
+                <p className="vote__average">
+                  {vote_average.toFixed(1)} <LiaImdb size={40} />
+                </p>
+              )}
+            </div>
+            <div className="movie__data">
+              <span>Genres</span>
+              <div className="genres">{movieGenre}</div>
+              <span>Directors</span>
+              <div className="director">{movieDirector.name}</div>
+              <span>Cast</span>
+              <div className="cast">{movieActors}</div>
+              <span>Summary</span>
+              <div className="overview">
+                <p>{overview}</p>
+              </div>
+            </div>
+          </div>
+        </main>
+      )}
+    </>
   );
 }

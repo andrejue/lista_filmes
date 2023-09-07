@@ -41,7 +41,7 @@ export default function MovieCard({ movies, title }) {
             <Link key={id} to={`/movie/${id}`}>
               <div className="movie__poster">
                 <div className="movie__rating">
-                  {vote_average}
+                  {vote_average.toFixed(1)}
                   <AiFillStar className="movie__rating__star" size={20} />
                 </div>
                 <img
