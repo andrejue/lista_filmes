@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
 import { useParams } from "react-router";
 import { LiaImdb } from "react-icons/lia";
 
@@ -35,10 +35,8 @@ export default function MovieInfo() {
       });
       setMovieGenre(genresDiv);
       setMovieInfo(data);
-      setLoading(false);
     } catch (error) {
       console.error("ERROR:", error);
-      setLoading(false);
     }
   };
 
@@ -60,10 +58,8 @@ export default function MovieInfo() {
       });
 
       setMovieImages(smallestLogo);
-      setLoading(false);
     } catch (error) {
       console.error("ERROR:", error);
-      setLoading(false);
     }
   };
 
@@ -89,10 +85,8 @@ export default function MovieInfo() {
       setMovieDirector(director[0]);
       setMovieActors(first3Actors);
       setMovieCredits(data);
-      setLoading(false);
     } catch (error) {
       console.error("ERROR:", error);
-      setLoading(false);
     }
   };
 
@@ -104,6 +98,20 @@ export default function MovieInfo() {
     getMovieImages(movieImgUrl);
     getMovieInfo(url);
     getMovieCredits(movieCreditsUrl);
+  }, []);
+
+  useEffect(() => {
+    const handleLoad = () => {
+      setLoading(false);
+    };
+
+    if (document.readyState === "complete") {
+      handleLoad();
+    } else {
+      window.addEventListener("load", handleLoad);
+
+      window.removeEventListener("load", handleLoad);
+    }
   }, []);
 
   const {
@@ -127,7 +135,11 @@ export default function MovieInfo() {
 
   return (
     <>
-      {loading && <div className="loading__spinner"></div>}
+      {loading && (
+        <div className="loading__spinner__div">
+          <div className="loading__spinner"></div>
+        </div>
+      )}
       {!loading && (
         <main
           className="movie__info__container"
