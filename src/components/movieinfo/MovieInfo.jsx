@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import { LiaImdb } from "react-icons/lia";
 
 import "./MovieInfo.scss";
+import Loader from "../loader/Loader";
 
 const findUrl = "https://api.themoviedb.org/3/movie/";
 const apiKey = import.meta.env.VITE_API_KEY;
@@ -17,6 +18,7 @@ export default function MovieInfo() {
   const [movieDirector, setMovieDirector] = useState([]);
   const [movieImages, setMovieImages] = useState({});
   const [movieCredits, setMovieCredits] = useState({});
+  const [movieVideos, setMovieVideos] = useState([]);
 
   const getMovieInfo = async (url) => {
     try {
@@ -24,7 +26,6 @@ export default function MovieInfo() {
       const data = await res.json();
 
       const { genres } = data;
-      console.log(genres);
 
       const genresDiv = genres.map((genre) => {
         return (
@@ -58,6 +59,7 @@ export default function MovieInfo() {
       });
 
       setMovieImages(smallestLogo);
+      setLoading(false);
     } catch (error) {
       console.error("ERROR:", error);
     }
@@ -74,7 +76,6 @@ export default function MovieInfo() {
         }
       });
 
-      console.log(director);
       const first3Actors = first3ActorsArray.map((actor) => {
         return (
           <div className="actor" key={actor.id}>
@@ -90,28 +91,49 @@ export default function MovieInfo() {
     }
   };
 
+  const getMovieVideos = async (url) => {
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+
+      console.log(data.results);
+
+      const trailer = data.results.filter((video) => {
+        if (
+          video.official &&
+          (video.type === "Trailer" || video.type === "Clip")
+        ) {
+          if (
+            video.name === "Official Trailer" ||
+            video.name === "Official Final Trailer" ||
+            video.name === "Official 4K Trailer" ||
+            video.name === "Main Trailer" ||
+            video.name === "Final Trailer" ||
+            video.name === "Release Trailer"
+          ) {
+            return video;
+          }
+        } else {
+          return video[0];
+        }
+      });
+
+      setMovieVideos(trailer[0].key);
+    } catch (error) {
+      console.error("ERROR:", error);
+    }
+  };
+
   useEffect(() => {
     const url = `${findUrl}${id}?${apiKey}`;
     const movieImgUrl = `https://api.themoviedb.org/3/movie/${id}/images?${apiKey}`;
     const movieCreditsUrl = `https://api.themoviedb.org/3/movie/${id}/credits?api_key=00c1947745acd4bb607e67032972980f`;
+    const movieVideosUrl = `https://api.themoviedb.org/3/movie/${id}/videos?${apiKey}`;
 
     getMovieImages(movieImgUrl);
     getMovieInfo(url);
     getMovieCredits(movieCreditsUrl);
-  }, []);
-
-  useEffect(() => {
-    const handleLoad = () => {
-      setLoading(false);
-    };
-
-    if (document.readyState === "complete") {
-      handleLoad();
-    } else {
-      window.addEventListener("load", handleLoad);
-
-      window.removeEventListener("load", handleLoad);
-    }
+    getMovieVideos(movieVideosUrl);
   }, []);
 
   const {
@@ -127,19 +149,12 @@ export default function MovieInfo() {
     title,
     vote_average,
   } = movieInfo;
-  console.log(movieInfo);
-  console.log(movieCredits.crew);
-  console.log(movieImages);
 
   const { cast, crew } = movieCredits;
 
   return (
     <>
-      {loading && (
-        <div className="loading__spinner__div">
-          <div className="loading__spinner"></div>
-        </div>
-      )}
+      {loading && <Loader />}
       {!loading && (
         <main
           className="movie__info__container"
@@ -173,6 +188,18 @@ export default function MovieInfo() {
               </div>
             </div>
           </div>
+          <section className="movie__trailer__container">
+            <span>Trailer</span>
+            <iframe
+              width="580"
+              height="326"
+              src={`https://www.youtube.com/embed/${movieVideos}?si=1nRNHSRC1NyrVEwg`}
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            ></iframe>
+          </section>
         </main>
       )}
     </>
