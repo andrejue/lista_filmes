@@ -29,11 +29,11 @@ export default function Search() {
   console.log(movies);
 
   return (
-    <div>
+    <main className="home__container">
       {movies.length === 0 && <Loader />}
       {movies.length > 0 && (
         <MovieCard movies={movies} title={`Search results to ${query}`} />
       )}
-    </div>
+    </main>
   );
 }

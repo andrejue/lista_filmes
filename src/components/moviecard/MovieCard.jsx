@@ -31,7 +31,7 @@ export default function MovieCard({ movies, title, type }) {
   const carousel = useRef(null);
 
   return (
-    <div className="card__carousel__top__movies">
+    <main className="card__carousel__top__movies">
       <h2 className="top__movies__title">{title}</h2>
       <div className="card__container" ref={carousel}>
         {shuffleMovies.length === 0 && <div>Loading movies...</div>}
@@ -68,6 +68,6 @@ export default function MovieCard({ movies, title, type }) {
       <button onClick={handleRightClick} className="right__carousel">
         <FaChevronCircleRight size={42} />
       </button>
-    </div>
+    </main>
   );
 }
