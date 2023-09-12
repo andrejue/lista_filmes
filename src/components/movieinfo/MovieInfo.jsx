@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { LiaImdb } from "react-icons/lia";
+import ReactPlayer from "react-player";
 
 import "./MovieInfo.scss";
 import Loader from "../loader/Loader";
@@ -19,6 +20,7 @@ export default function MovieInfo() {
   const [movieDirector, setMovieDirector] = useState([]);
   const [movieImages, setMovieImages] = useState({});
   const [movieVideos, setMovieVideos] = useState([]);
+  const [trailerIsPlaying, setTrailerIsPlaying] = useState(false);
 
   const getMovieInfo = async (url) => {
     try {
@@ -176,16 +178,16 @@ export default function MovieInfo() {
               </div>
             </div>
           </div>
-          <section className="movie__trailer__container">
-            <iframe
-              width="680"
-              height="380"
-              src={`https://www.youtube.com/embed/${movieVideos}?si=1nRNHSRC1NyrVEwg`}
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            ></iframe>
+          <section
+            className={`movie__trailer__container ${
+              trailerIsPlaying ? "playing" : ""
+            }`}
+          >
+            <ReactPlayer
+              onPlay={() => setTrailerIsPlaying(true)}
+              onPause={() => setTrailerIsPlaying(false)}
+              url={`https://www.youtube.com/watch?v=${movieVideos}`}
+            />
           </section>
         </main>
       )}

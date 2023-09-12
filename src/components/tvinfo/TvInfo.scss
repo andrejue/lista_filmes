@@ -2,3 +2,16 @@
   font-size: 2rem;
   text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.661);
 }
+
+.movie__trailer__container {
+  opacity: 0.6;
+  transition: all 0.4s ease-in-out;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.playing {
+  opacity: 1;
+}

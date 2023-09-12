@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { LiaImdb } from "react-icons/lia";
+import ReactPlayer from "react-player";
 
 import "./TvInfo.scss";
 import Loader from "../loader/Loader";
@@ -19,6 +20,7 @@ export default function TvInfo() {
   const [movieDirector, setMovieDirector] = useState({});
   const [movieImages, setMovieImages] = useState({});
   const [movieVideos, setMovieVideos] = useState([]);
+  const [trailerIsPlaying, setTrailerIsPlaying] = useState(false);
 
   const getTvShowInfo = async (url) => {
     try {
@@ -67,7 +69,6 @@ export default function TvInfo() {
       const data = await res.json();
 
       const first3ActorsArray = data.cast.slice(0, 3);
-      console.log(data);
 
       const director = data.crew.filter((director) => {
         if (director.job) {
@@ -98,37 +99,40 @@ export default function TvInfo() {
     }
   };
 
-  // const getMovieVideos = async (url) => {
-  //   try {
-  //     const res = await fetch(url);
-  //     const data = await res.json();
+  const getMovieVideos = async (url) => {
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
 
-  //     const trailer = data.results.filter((video) => {
-  //       if (
-  //         video.official &&
-  //         (video.type === "Trailer" || video.type === "Clip")
-  //       ) {
-  //         if (
-  //           video.name === "Official Trailer" ||
-  //           video.name === "Digital Trailer" ||
-  //           video.name === "Official Final Trailer" ||
-  //           video.name === "Official 4K Trailer" ||
-  //           video.name === "Main Trailer" ||
-  //           video.name === "Final Trailer" ||
-  //           video.name === "Release Trailer"
-  //         ) {
-  //           return video;
-  //         }
-  //       } else {
-  //         return video[0];
-  //       }
-  //     });
-
-  //     setMovieVideos(trailer[0].key);
-  //   } catch (error) {
-  //     console.error("ERROR:", error);
-  //   }
-  // };
+      if (data.results) {
+        const trailer = data.results.filter((video) => {
+          if (
+            video.official &&
+            (video.type === "Trailer" || video.type === "Clip")
+          ) {
+            if (
+              video.name === "Official Trailer" ||
+              video.name === "Digital Trailer" ||
+              video.name === "Official Final Trailer" ||
+              video.name === "Official 4K Trailer" ||
+              video.name === "Main Trailer" ||
+              video.name === "Final Trailer" ||
+              video.name === "Release Trailer"
+            ) {
+              return video;
+            }
+          } else {
+            return video[0];
+          }
+        });
+        setMovieVideos(trailer[0].key);
+      } else {
+        setMovieVideos(null);
+      }
+    } catch (error) {
+      console.error("ERROR:", error);
+    }
+  };
 
   useEffect(() => {
     const url = `${findUrl}${id}?${apiKey}`;
@@ -139,7 +143,7 @@ export default function TvInfo() {
     getTvShowInfo(url);
     getTvShowImages(tvShowImgUrl);
     getTvShowCredits(movieCreditsUrl);
-    // getMovieVideos(movieVideosUrl);
+    getMovieVideos(movieVideosUrl);
   }, []);
 
   const {
@@ -196,17 +200,20 @@ export default function TvInfo() {
               </div>
             </div>
           </div>
-          <section className="movie__trailer__container">
-            <iframe
-              width="680"
-              height="380"
-              src={`https://www.youtube.com/embed/${movieVideos}?si=1nRNHSRC1NyrVEwg`}
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            ></iframe>
-          </section>
+
+          {movieVideos !== null && (
+            <section
+              className={`movie__trailer__container ${
+                trailerIsPlaying ? "playing" : ""
+              }`}
+            >
+              <ReactPlayer
+                onPlay={() => setTrailerIsPlaying(true)}
+                onPause={() => setTrailerIsPlaying(false)}
+                url={`https://www.youtube.com/watch?v=${movieVideos}`}
+              />
+            </section>
+          )}
         </main>
       )}
     </>
