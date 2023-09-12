@@ -46,10 +46,6 @@
   font-size: 1.25rem;
 }
 
-.search {
-  align-self: center !important;
-}
-
 .third__visibility__hidden {
   display: flex;
   margin-right: 2rem;

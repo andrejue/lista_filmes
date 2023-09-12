@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import MovieCard from "../moviecard/MovieCard";
+import Loader from "../loader/Loader";
 
 const searchUrl = import.meta.env.VITE_SEARCH;
 const apiKey = import.meta.env.VITE_API_KEY;
@@ -29,7 +30,7 @@ export default function Search() {
 
   return (
     <div>
-      {movies.length === 0 && <p>Loading movies...</p>}
+      {movies.length === 0 && <Loader />}
       {movies.length > 0 && (
         <MovieCard movies={movies} title={`Search results to ${query}`} />
       )}

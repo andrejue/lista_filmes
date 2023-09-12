@@ -6,12 +6,13 @@ import { FaChevronCircleRight } from "react-icons/fa";
 import "./MovieCard.scss";
 import { Link } from "react-router-dom";
 
-export default function MovieCard({ movies, title }) {
+export default function MovieCard({ movies, title, type }) {
   const shuffleMovies = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
+
     return array;
   };
 
@@ -38,7 +39,7 @@ export default function MovieCard({ movies, title }) {
           const { id, vote_average, poster_path, title, release_date } = movie;
 
           return (
-            <Link key={id} to={`/movie/${id}`}>
+            <Link key={id} to={`/movie/${id}/${type}`}>
               <div className="movie__poster">
                 <div className="movie__rating">
                   {vote_average.toFixed(1)}

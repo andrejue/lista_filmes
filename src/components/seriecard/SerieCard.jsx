@@ -4,8 +4,9 @@ import { FaChevronCircleLeft } from "react-icons/fa";
 import { FaChevronCircleRight } from "react-icons/fa";
 
 import "./SerieCard.scss";
+import { Link } from "react-router-dom";
 
-export default function SerieieCard({ series }) {
+export default function SerieieCard({ series, type }) {
   const shuffleSeries = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -32,28 +33,30 @@ export default function SerieieCard({ series }) {
     <div className="card__carousel__top__movies">
       <h2 className="top__movies__title">Top TV Series</h2>
       <div className="card__container" ref={carousel}>
-        {shuffledSeries.map((movie) => {
-          const { id, vote_average, poster_path, name, first_air_date } = movie;
+        {shuffledSeries.map((serie) => {
+          const { id, vote_average, poster_path, name, first_air_date } = serie;
 
           return (
-            <div className="movie__poster" key={id}>
-              <div className="movie__rating">
-                {vote_average}
-                <AiFillStar className="movie__rating__star" size={20} />
-              </div>
+            <Link key={id} to={`/tv/${id}/${type}`}>
+              <div className="movie__poster">
+                <div className="movie__rating">
+                  {vote_average}
+                  <AiFillStar className="movie__rating__star" size={20} />
+                </div>
 
-              <img
-                src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
-                alt="Movie Cover"
-                className="movie__cover"
-              />
-              <div className="movie__title">
-                <h3>
-                  {name} ({first_air_date.substring(0, 4)})
-                </h3>
+                <img
+                  src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
+                  alt="Movie Cover"
+                  className="movie__cover"
+                />
+                <div className="movie__title">
+                  <h3>
+                    {name} ({first_air_date.substring(0, 4)})
+                  </h3>
+                </div>
+                <div className="movie__backdrop__mini"></div>
               </div>
-              <div className="movie__backdrop__mini"></div>
-            </div>
+            </Link>
           );
         })}
       </div>

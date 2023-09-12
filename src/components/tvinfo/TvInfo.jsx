@@ -2,25 +2,25 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { LiaImdb } from "react-icons/lia";
 
-import "./MovieInfo.scss";
+import "./TvInfo.scss";
 import Loader from "../loader/Loader";
 
-const findUrl = "https://api.themoviedb.org/3/movie/";
+const findUrl = "https://api.themoviedb.org/3/tv/";
 const apiKey = import.meta.env.VITE_API_KEY;
 const imgUrl = import.meta.env.VITE_IMG_ORIGINAL;
 
-export default function MovieInfo() {
+export default function TvInfo() {
   const { id, type } = useParams();
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [movieInfo, setMovieInfo] = useState({});
   const [movieGenre, setMovieGenre] = useState([]);
   const [movieActors, setMovieActors] = useState([]);
-  const [movieDirector, setMovieDirector] = useState([]);
+  const [movieDirector, setMovieDirector] = useState({});
   const [movieImages, setMovieImages] = useState({});
   const [movieVideos, setMovieVideos] = useState([]);
 
-  const getMovieInfo = async (url) => {
+  const getTvShowInfo = async (url) => {
     try {
       const res = await fetch(url);
       const data = await res.json();
@@ -34,7 +34,6 @@ export default function MovieInfo() {
           </div>
         );
       });
-      console.log(data);
       setMovieGenre(genresDiv);
       setMovieInfo(data);
     } catch (error) {
@@ -42,7 +41,7 @@ export default function MovieInfo() {
     }
   };
 
-  const getMovieImages = async (url) => {
+  const getTvShowImages = async (url) => {
     try {
       const res = await fetch(url);
       const data = await res.json();
@@ -62,13 +61,25 @@ export default function MovieInfo() {
     }
   };
 
-  const getMovieCredits = async (url) => {
+  const getTvShowCredits = async (url) => {
     try {
       const res = await fetch(url);
       const data = await res.json();
+
       const first3ActorsArray = data.cast.slice(0, 3);
+      console.log(data);
+
       const director = data.crew.filter((director) => {
-        if (director.job === "Director") {
+        if (director.job) {
+          if (director.job === "Director") {
+            return director;
+          }
+        }
+        if (
+          director.known_for_department === "Creator" ||
+          director.known_for_department === "Director" ||
+          director.known_for_department === "Writing"
+        ) {
           return director;
         }
       });
@@ -87,56 +98,56 @@ export default function MovieInfo() {
     }
   };
 
-  const getMovieVideos = async (url) => {
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
+  // const getMovieVideos = async (url) => {
+  //   try {
+  //     const res = await fetch(url);
+  //     const data = await res.json();
 
-      const trailer = data.results.filter((video) => {
-        if (
-          video.official &&
-          (video.type === "Trailer" || video.type === "Clip")
-        ) {
-          if (
-            video.name === "Official Trailer" ||
-            video.name === "Digital Trailer" ||
-            video.name === "Official Final Trailer" ||
-            video.name === "Official 4K Trailer" ||
-            video.name === "Main Trailer" ||
-            video.name === "Final Trailer" ||
-            video.name === "Release Trailer"
-          ) {
-            return video;
-          }
-        } else {
-          return video[0];
-        }
-      });
+  //     const trailer = data.results.filter((video) => {
+  //       if (
+  //         video.official &&
+  //         (video.type === "Trailer" || video.type === "Clip")
+  //       ) {
+  //         if (
+  //           video.name === "Official Trailer" ||
+  //           video.name === "Digital Trailer" ||
+  //           video.name === "Official Final Trailer" ||
+  //           video.name === "Official 4K Trailer" ||
+  //           video.name === "Main Trailer" ||
+  //           video.name === "Final Trailer" ||
+  //           video.name === "Release Trailer"
+  //         ) {
+  //           return video;
+  //         }
+  //       } else {
+  //         return video[0];
+  //       }
+  //     });
 
-      setMovieVideos(trailer[0].key);
-    } catch (error) {
-      console.error("ERROR:", error);
-    }
-  };
+  //     setMovieVideos(trailer[0].key);
+  //   } catch (error) {
+  //     console.error("ERROR:", error);
+  //   }
+  // };
 
   useEffect(() => {
     const url = `${findUrl}${id}?${apiKey}`;
-    const movieImgUrl = `https://api.themoviedb.org/3/movie/${id}/images?${apiKey}`;
-    const movieCreditsUrl = `https://api.themoviedb.org/3/movie/${id}/credits?api_key=00c1947745acd4bb607e67032972980f`;
-    const movieVideosUrl = `https://api.themoviedb.org/3/movie/${id}/videos?${apiKey}`;
+    const tvShowImgUrl = `https://api.themoviedb.org/3/tv/${id}/images?${apiKey}`;
+    const movieCreditsUrl = `https://api.themoviedb.org/3/tv/${id}/credits?api_key=00c1947745acd4bb607e67032972980f`;
+    const movieVideosUrl = `https://api.themoviedb.org/3/tv/${id}/videos?${apiKey}`;
 
-    getMovieImages(movieImgUrl);
-    getMovieInfo(url);
-    getMovieCredits(movieCreditsUrl);
-    getMovieVideos(movieVideosUrl);
+    getTvShowInfo(url);
+    getTvShowImages(tvShowImgUrl);
+    getTvShowCredits(movieCreditsUrl);
+    // getMovieVideos(movieVideosUrl);
   }, []);
 
   const {
     backdrop_path,
     overview,
-    release_date,
-    runtime,
-    title,
+    first_air_date,
+    name,
+    original_name,
     vote_average,
   } = movieInfo;
 
@@ -149,14 +160,18 @@ export default function MovieInfo() {
           style={{ backgroundImage: `url(${imgUrl}${backdrop_path})` }}
         >
           <div className="movie__info__card">
-            <img
-              src={`https://image.tmdb.org/t/p/original/${movieImages.file_path}`}
-              alt={`${title} Logo`}
-              className="movie__logo"
-            />
+            {movieImages.file_path ? (
+              <img
+                src={`https://image.tmdb.org/t/p/original/${movieImages.file_path}`}
+                alt={`${original_name} Logo`}
+                className="movie__logo"
+              />
+            ) : (
+              <h2 className="tv__title">{name}</h2>
+            )}
+
             <div className="movie__infos">
-              <p>{runtime} min</p>
-              {release_date && <p>{release_date.substring(0, 4)}</p>}
+              {first_air_date && <p>{first_air_date.substring(0, 4)}</p>}
               {vote_average && (
                 <p className="vote__average">
                   {vote_average.toFixed(1)} <LiaImdb size={40} />
@@ -166,8 +181,13 @@ export default function MovieInfo() {
             <div className="movie__data">
               <span>Genres</span>
               <div className="genres">{movieGenre}</div>
-              <span>Directors</span>
-              <div className="director">{movieDirector.name}</div>
+              {movieDirector != undefined ? (
+                <div>
+                  <span>{movieDirector.known_for_department}</span>
+                  <div className="director">{movieDirector.name}</div>
+                </div>
+              ) : null}
+
               <span>Cast</span>
               <div className="cast">{movieActors}</div>
               <span>Summary</span>

@@ -5,6 +5,7 @@ import "./App.css";
 import Home from "./pages/Home";
 import Search from "./components/search/Search";
 import MovieInfo from "./components/movieinfo/MovieInfo";
+import TvInfo from "./components/tvinfo/TvInfo";
 
 const router = createBrowserRouter([
   {
@@ -20,8 +21,12 @@ const router = createBrowserRouter([
         element: <Search />,
       },
       {
-        path: "/movie/:id",
+        path: "/movie/:id/:type",
         element: <MovieInfo />,
+      },
+      {
+        path: "/tv/:id/:type",
+        element: <TvInfo />,
       },
     ],
   },

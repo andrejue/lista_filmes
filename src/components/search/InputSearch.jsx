@@ -2,6 +2,8 @@ import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router";
 
+import "./InputSearch.scss";
+
 export default function InputSearch() {
   const [search, setSearch] = useState("");
 
@@ -21,7 +23,7 @@ export default function InputSearch() {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Search a movie..."
+          placeholder="Search a movie, TV show, etc..."
           onChange={(e) => setSearch(e.target.value)}
           value={search}
         />

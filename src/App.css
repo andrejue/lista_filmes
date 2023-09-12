@@ -30,3 +30,7 @@ a:hover {
 ul > li {
   list-style-type: none;
 }
+
+.home__container {
+  padding-top: 3rem;
+}
