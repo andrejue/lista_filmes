@@ -7,14 +7,9 @@ import "./MovieCard.scss";
 import { Link } from "react-router-dom";
 
 export default function MovieCard({ movies, title, type }) {
-  const shuffleMovies = (array) => {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-
-    return array;
-  };
+  const sortedMovies = movies
+    .slice()
+    .sort((a, b) => b.popularity - a.popularity);
 
   const handleLeftClick = (e) => {
     e.preventDefault();
@@ -26,23 +21,37 @@ export default function MovieCard({ movies, title, type }) {
     carousel.current.scrollLeft += carousel.current.offsetWidth;
   };
 
-  const shuffledMovies = shuffleMovies(movies);
-
   const carousel = useRef(null);
 
   return (
     <main className="card__carousel__top__movies">
       <h2 className="top__movies__title">{title}</h2>
       <div className="card__container" ref={carousel}>
-        {shuffleMovies.length === 0 && <div>Loading movies...</div>}
-        {shuffledMovies.map((movie) => {
-          const { id, vote_average, poster_path, title, release_date } = movie;
+        {sortedMovies.length === 0 && <div>Loading movies...</div>}
+        {sortedMovies.map((movie) => {
+          const {
+            id,
+            mediaType,
+            vote_average,
+            popularity,
+            poster_path,
+            title,
+            release_date,
+          } = movie;
 
+          console.log(movie);
+          let link = null;
+
+          if (mediaType == "tv") {
+            link = `/tv/${id}/${type}`;
+          } else {
+            link = `/movie/${id}/${type}`;
+          }
           return (
-            <Link key={id} to={`/movie/${id}/${type}`}>
+            <Link key={id} to={link}>
               <div className="movie__poster">
                 <div className="movie__rating">
-                  {vote_average.toFixed(1)}
+                  {vote_average ? vote_average.toFixed(1) : 0}
                   <AiFillStar className="movie__rating__star" size={20} />
                 </div>
                 <img
@@ -52,7 +61,7 @@ export default function MovieCard({ movies, title, type }) {
                 />
                 <div className="movie__title">
                   <h3>
-                    {title} ({release_date.substring(0, 4)})
+                    {title} ({release_date && release_date.substring(0, 4)})
                   </h3>
                 </div>
                 <div className="movie__backdrop__mini"></div>

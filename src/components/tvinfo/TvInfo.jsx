@@ -107,7 +107,8 @@ export default function TvInfo() {
       const res = await fetch(url);
       const data = await res.json();
 
-      if (data.results) {
+      console.log(data);
+      if (data.results.length > 0) {
         const trailer = data.results.filter((video) => {
           if (
             video.official &&
@@ -128,7 +129,9 @@ export default function TvInfo() {
             return video[0];
           }
         });
-        setMovieVideos(trailer[0].key);
+        if (trailer.lenght > 0) {
+          setMovieVideos(trailer[0].key);
+        }
       } else {
         setMovieVideos(null);
       }

@@ -20,13 +20,6 @@ export default function Home() {
     setBestMovies(data.results);
   };
 
-  const getNowPlayingMovies = async (url) => {
-    const res = await fetch(url);
-    const data = await res.json();
-
-    console.log(data);
-  };
-
   const getBestRatedSeries = async (url) => {
     const res = await fetch(url);
     const data = await res.json();
@@ -36,12 +29,11 @@ export default function Home() {
 
   useEffect(() => {
     const bestRatedMoviesUrl = `${moviesUrl}popular?${apiKey}`;
-    const nowPlayingMoviesUrl = `${moviesUrl}now_playing?${apiKey}`;
-    const bestRatedSeriesUrl = `${seriesUrl}popular?${apiKey}`;
+    const bestRatedSeriesUrl = `https://api.themoviedb.org/3/tv/top_rated?${apiKey}`;
 
+    console.log(bestRatedSeriesUrl);
     getBestRatedMovies(bestRatedMoviesUrl);
     getBestRatedSeries(bestRatedSeriesUrl);
-    getNowPlayingMovies(nowPlayingMoviesUrl);
   }, []);
 
   return (

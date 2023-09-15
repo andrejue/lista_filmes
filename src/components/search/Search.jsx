@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import MovieCard from "../moviecard/MovieCard";
 import Loader from "../loader/Loader";
+import InputSearch from "./InputSearch";
 
-const searchUrl = import.meta.env.VITE_SEARCH;
+const searchUrl = import.meta.env.VITE_MULTI_SEARCH;
 const apiKey = import.meta.env.VITE_API_KEY;
 
 export default function Search() {
@@ -27,7 +28,7 @@ export default function Search() {
 
   const getMovies = async (page) => {
     try {
-      const url = `${searchUrl}?${apiKey}&query=${query}&page=${page}`;
+      const url = `${searchUrl}?${apiKey}&query=${query}&language=en-US&page=${page}`;
 
       const res = await fetch(url);
       const data = await res.json();
@@ -37,6 +38,8 @@ export default function Search() {
       console.error("GET MOVIES ERROR:", error);
     }
   };
+
+  console.log(movies);
 
   useEffect(() => {
     const searchMoviesUrl = `${searchUrl}?${apiKey}&query=${query}`;
@@ -59,6 +62,7 @@ export default function Search() {
 
   return (
     <main className="home__container">
+      <InputSearch />
       {movies.length === 0 && <Loader />}
       {movies.length > 0 && (
         <MovieCard movies={movies} title={`Search results to ${query}:`} />
