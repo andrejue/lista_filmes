@@ -10,13 +10,32 @@ export default function Search() {
   const [searchParams] = useSearchParams();
 
   const [movies, setMovies] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
+
   const query = searchParams.get("q");
 
   const getSearchMovies = async (url) => {
-    const res = await fetch(url);
-    const data = await res.json();
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
 
-    setMovies(data.results);
+      setTotalPages(data.total_pages);
+    } catch (error) {
+      console.error("SEARCH MOVIES ERROR:", error);
+    }
+  };
+
+  const getMovies = async (page) => {
+    try {
+      const url = `${searchUrl}?${apiKey}&query=${query}&page=${page}`;
+
+      const res = await fetch(url);
+      const data = await res.json();
+
+      setMovies((prevMovies) => [...prevMovies, ...data.results]);
+    } catch (error) {
+      console.error("GET MOVIES ERROR:", error);
+    }
   };
 
   useEffect(() => {
@@ -26,13 +45,23 @@ export default function Search() {
     getSearchMovies(searchMoviesUrl);
   }, [query]);
 
-  console.log(movies);
+  useEffect(() => {
+    const fetchMovies = async () => {
+      for (let page = 1; page <= totalPages; page++) {
+        await getMovies(page);
+      }
+    };
+
+    if (totalPages > 0) {
+      fetchMovies();
+    }
+  }, [totalPages]);
 
   return (
     <main className="home__container">
       {movies.length === 0 && <Loader />}
       {movies.length > 0 && (
-        <MovieCard movies={movies} title={`Search results to ${query}`} />
+        <MovieCard movies={movies} title={`Search results to ${query}:`} />
       )}
     </main>
   );

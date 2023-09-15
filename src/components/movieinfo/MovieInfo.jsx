@@ -36,7 +36,6 @@ export default function MovieInfo() {
           </div>
         );
       });
-      console.log(data);
       setMovieGenre(genresDiv);
       setMovieInfo(data);
     } catch (error) {
@@ -49,16 +48,22 @@ export default function MovieInfo() {
       const res = await fetch(url);
       const data = await res.json();
 
-      const smallestLogo = data.logos.reduce((smallest, img) => {
-        if (img.iso_639_1 === "en") {
-          return img.width < smallest.width ? img : smallest;
-        } else {
-          return smallest;
-        }
-      });
+      console.log(data);
 
-      setMovieImages(smallestLogo);
-      setLoading(false);
+      if (data.logos.length === 0) {
+        setLoading(false);
+        return null;
+      } else {
+        const smallestLogo = data.logos.reduce((smallest, img) => {
+          if (img.iso_639_1 === "en") {
+            return img.width < smallest.width ? img : smallest;
+          } else {
+            return smallest;
+          }
+        });
+        setMovieImages(smallestLogo);
+        setLoading(false);
+      }
     } catch (error) {
       console.error("ERROR:", error);
     }
@@ -142,6 +147,8 @@ export default function MovieInfo() {
     vote_average,
   } = movieInfo;
 
+  console.log(movieInfo);
+
   return (
     <>
       {loading && <Loader />}
@@ -151,11 +158,15 @@ export default function MovieInfo() {
           style={{ backgroundImage: `url(${imgUrl}${backdrop_path})` }}
         >
           <div className="movie__info__card">
-            <img
-              src={`https://image.tmdb.org/t/p/original/${movieImages.file_path}`}
-              alt={`${title} Logo`}
-              className="movie__logo"
-            />
+            {movieImages.file_path ? (
+              <img
+                src={`https://image.tmdb.org/t/p/original/${movieImages.file_path}`}
+                alt={`${title} Logo`}
+                className="movie__logo"
+              />
+            ) : (
+              <h2 className="tv__title">{title}</h2>
+            )}
             <div className="movie__infos">
               <p>{runtime} min</p>
               {release_date && <p>{release_date.substring(0, 4)}</p>}

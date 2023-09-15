@@ -48,16 +48,19 @@ export default function TvInfo() {
       const res = await fetch(url);
       const data = await res.json();
 
-      const smallestLogo = data.logos.reduce((smallest, img) => {
-        if (img.iso_639_1 === "en") {
-          return img.width < smallest.width ? img : smallest;
-        } else {
-          return smallest;
-        }
-      });
-
-      setMovieImages(smallestLogo);
-      setLoading(false);
+      if (data.logos.length === 0) {
+        return null;
+      } else {
+        const smallestLogo = data.logos.reduce((smallest, img) => {
+          if (img.iso_639_1 === "en") {
+            return img.width < smallest.width ? img : smallest;
+          } else {
+            return smallest;
+          }
+        });
+        setMovieImages(smallestLogo);
+        setLoading(false);
+      }
     } catch (error) {
       console.error("ERROR:", error);
     }
