@@ -7,13 +7,9 @@ import "./SerieCard.scss";
 import { Link } from "react-router-dom";
 
 export default function SerieieCard({ series, type }) {
-  const shuffleSeries = (array) => {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  };
+  const sortedSeries = series
+    .slice()
+    .sort((a, b) => b.popularity - a.popularity);
 
   const handleLeftClick = (e) => {
     e.preventDefault();
@@ -25,15 +21,13 @@ export default function SerieieCard({ series, type }) {
     carousel.current.scrollLeft += carousel.current.offsetWidth;
   };
 
-  const shuffledSeries = shuffleSeries(series);
-
   const carousel = useRef(null);
 
   return (
-    <div className="card__carousel__top__movies">
+    <section className="card__carousel__top__movies">
       <h2 className="top__movies__title">Top TV Series</h2>
       <div className="card__container" ref={carousel}>
-        {shuffledSeries.map((serie) => {
+        {sortedSeries.map((serie) => {
           const { id, vote_average, poster_path, name, first_air_date } = serie;
 
           return (
@@ -67,6 +61,6 @@ export default function SerieieCard({ series, type }) {
       <button onClick={handleRightClick} className="right__carousel">
         <FaChevronCircleRight size={42} />
       </button>
-    </div>
+    </section>
   );
 }

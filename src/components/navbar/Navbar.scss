@@ -1,9 +1,16 @@
 $link-color: #a16426;
 $text-color: #f99837;
 
+.header {
+  a {
+    color: $text-color;
+  }
+}
+
 .link {
   .movie__logo {
     transition: 0.3s ease-in-out;
+    color: $text-color;
 
     &:hover {
       transform: rotate(10deg);

@@ -12,6 +12,15 @@
   z-index: 5;
 }
 
+.header > a {
+  text-decoration: none;
+  color: #f99837 !important;
+}
+
+.header > a:hover {
+  color: #cb7a29 !important;
+}
+
 .header > h2 {
   margin-left: 2rem;
   font-size: 1.8rem;

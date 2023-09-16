@@ -1,0 +1,23 @@
+.people__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1rem;
+
+  .person__carousel {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .people__card {
+    width: 100px;
+    height: auto;
+
+    img {
+      border-radius: 20px;
+      box-shadow: 3px 3px 8px #f99837aa;
+      width: 100%;
+    }
+  }
+}

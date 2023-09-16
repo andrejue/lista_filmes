@@ -24,7 +24,7 @@ export default function MovieCard({ movies, title, type }) {
   const carousel = useRef(null);
 
   return (
-    <main className="card__carousel__top__movies">
+    <section className="card__carousel__top__movies">
       <h2 className="top__movies__title">{title}</h2>
       <div className="card__container" ref={carousel}>
         {sortedMovies.length === 0 && <div>Loading movies...</div>}
@@ -39,7 +39,6 @@ export default function MovieCard({ movies, title, type }) {
             release_date,
           } = movie;
 
-          console.log(movie);
           let link = null;
 
           if (mediaType == "tv") {
@@ -47,6 +46,7 @@ export default function MovieCard({ movies, title, type }) {
           } else {
             link = `/movie/${id}/${type}`;
           }
+
           return (
             <Link key={id} to={link}>
               <div className="movie__poster">
@@ -77,6 +77,6 @@ export default function MovieCard({ movies, title, type }) {
       <button onClick={handleRightClick} className="right__carousel">
         <FaChevronCircleRight size={42} />
       </button>
-    </main>
+    </section>
   );
 }

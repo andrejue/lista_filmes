@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import MovieCard from "../moviecard/MovieCard";
 import Loader from "../loader/Loader";
 import InputSearch from "./InputSearch";
+import PeopleCard from "../people/PeopleCard";
 
 const searchUrl = import.meta.env.VITE_MULTI_SEARCH;
 const apiKey = import.meta.env.VITE_API_KEY;
@@ -10,7 +11,8 @@ const apiKey = import.meta.env.VITE_API_KEY;
 export default function Search() {
   const [searchParams] = useSearchParams();
 
-  const [movies, setMovies] = useState([]);
+  const [results, setResults] = useState([]);
+  const [people, setPeople] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
 
   const query = searchParams.get("q");
@@ -26,32 +28,35 @@ export default function Search() {
     }
   };
 
-  const getMovies = async (page) => {
+  const getResults = async (page) => {
     try {
       const url = `${searchUrl}?${apiKey}&query=${query}&language=en-US&page=${page}`;
 
       const res = await fetch(url);
       const data = await res.json();
 
-      setMovies((prevMovies) => [...prevMovies, ...data.results]);
+      setResults((prevResults) => [...prevResults, ...data.results]);
+
+      data.results.map((result) => {
+        if (result.media_type === "person") {
+          setPeople((prevPeople) => [...prevPeople, result]);
+        }
+      });
     } catch (error) {
-      console.error("GET MOVIES ERROR:", error);
+      console.error("GET RESULTS ERROR:", error);
     }
   };
 
-  console.log(movies);
-
   useEffect(() => {
-    const searchMoviesUrl = `${searchUrl}?${apiKey}&query=${query}`;
-    console.log(searchMoviesUrl);
+    const searchResultsUrl = `${searchUrl}?${apiKey}&query=${query}`;
 
-    getSearchMovies(searchMoviesUrl);
+    getSearchMovies(searchResultsUrl);
   }, [query]);
 
   useEffect(() => {
     const fetchMovies = async () => {
       for (let page = 1; page <= totalPages; page++) {
-        await getMovies(page);
+        await getResults(page);
       }
     };
 
@@ -63,9 +68,18 @@ export default function Search() {
   return (
     <main className="home__container">
       <InputSearch />
-      {movies.length === 0 && <Loader />}
-      {movies.length > 0 && (
-        <MovieCard movies={movies} title={`Search results to ${query}:`} />
+      {results.length === 0 && <Loader />}
+      {results.length > 0 && (
+        <div>
+          <MovieCard
+            movies={results}
+            title={`Movies search results to ${query}:`}
+          />
+          <PeopleCard
+            people={people}
+            title={`People search results to ${query}:`}
+          />
+        </div>
       )}
     </main>
   );

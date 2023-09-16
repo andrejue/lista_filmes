@@ -20,11 +20,7 @@ body {
 
 a {
   text-decoration: none;
-  color: #f99837;
-}
-
-a:hover {
-  color: #cb7a29;
+  color: #fff;
 }
 
 ul > li {
