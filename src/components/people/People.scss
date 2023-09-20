@@ -21,3 +21,32 @@
     }
   }
 }
+
+.person__info__container {
+  display: flex;
+  flex-direction: row;
+  gap: 3rem;
+
+  padding: 7rem 6rem;
+
+  height: 100vh;
+
+  .person__img__container {
+    img {
+      width: 500px;
+      border-radius: 30px;
+    }
+  }
+
+  .person__info {
+    padding: 3rem;
+
+    h1 {
+      margin-bottom: 1rem;
+    }
+
+    .person__bio {
+      padding-top: 2rem;
+    }
+  }
+}

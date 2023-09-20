@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { LiaImdb } from "react-icons/lia";
 import ReactPlayer from "react-player";
+import { Link } from "react-router-dom";
 
 import "./MovieInfo.scss";
 import Loader from "../loader/Loader";
@@ -31,11 +32,16 @@ export default function MovieInfo() {
 
       const genresDiv = genres.map((genre) => {
         return (
-          <div className="genre" key={genre.id}>
+          <Link
+            to={`/genre/${genre.id}/movie/${genre.name}`}
+            className="genre"
+            key={genre.id}
+          >
             {genre.name}
-          </div>
+          </Link>
         );
       });
+
       setMovieGenre(genresDiv);
       setMovieInfo(data);
     } catch (error) {

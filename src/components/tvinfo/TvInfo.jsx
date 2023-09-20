@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { LiaImdb } from "react-icons/lia";
 import ReactPlayer from "react-player";
+import { Link } from "react-router-dom";
 
 import "./TvInfo.scss";
 import Loader from "../loader/Loader";
@@ -31,9 +32,13 @@ export default function TvInfo() {
 
       const genresDiv = genres.map((genre) => {
         return (
-          <div className="genre" key={genre.id}>
+          <Link
+            to={`/genre/${genre.id}/tv/${genre.name}`}
+            className="genre"
+            key={genre.id}
+          >
             {genre.name}
-          </div>
+          </Link>
         );
       });
       setMovieGenre(genresDiv);
@@ -116,6 +121,8 @@ export default function TvInfo() {
           ) {
             if (
               video.name === "Official Trailer" ||
+              video.name === "Series Trailer" ||
+              video.name === "TV Trailer" ||
               video.name === "Digital Trailer" ||
               video.name === "Official Final Trailer" ||
               video.name === "Official 4K Trailer" ||

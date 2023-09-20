@@ -6,6 +6,9 @@ import Home from "./pages/Home";
 import Search from "./components/search/Search";
 import MovieInfo from "./components/movieinfo/MovieInfo";
 import TvInfo from "./components/tvinfo/TvInfo";
+import PageReload from "./components/PageReload";
+import PersonInfo from "./components/people/PersonInfo";
+import Genre from "./components/genres/Genre";
 
 const router = createBrowserRouter([
   {
@@ -18,7 +21,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/search",
-        element: <Search />,
+        element: <PageReload />,
       },
       {
         path: "/movie/:id/:type",
@@ -27,6 +30,14 @@ const router = createBrowserRouter([
       {
         path: "/tv/:id/:type",
         element: <TvInfo />,
+      },
+      {
+        path: "/person/:id",
+        element: <PersonInfo />,
+      },
+      {
+        path: "/genre/:id/:type/:name",
+        element: <Genre />,
       },
     ],
   },

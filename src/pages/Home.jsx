@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import InputSearch from "../components/search/InputSearch";
 import MovieCard from "../components/moviecard/MovieCard";
 import SerieieCard from "../components/seriecard/SerieCard";
+import Loader from "../components/loader/Loader";
 
 const moviesUrl = import.meta.env.VITE_API_MOVIES;
 const seriesUrl = import.meta.env.VITE_API_SERIES;
@@ -39,7 +40,7 @@ export default function Home() {
   return (
     <main className="home__container">
       <InputSearch />
-      {bestMovies.lenght === 0 && <div>Loading movies...</div>}
+      {bestMovies.lenght === 0 && <Loader />}
 
       {bestMovies.length > 0 && (
         <MovieCard movies={bestMovies} title="Top Movies" type="1" />

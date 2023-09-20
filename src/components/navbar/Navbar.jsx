@@ -3,6 +3,7 @@ import { BiCameraMovie } from "react-icons/bi";
 
 import "./Navbar.css";
 import "./Navbar.scss";
+import InputSearch from "../search/InputSearch";
 
 export default function Navbar() {
   return (
@@ -13,6 +14,7 @@ export default function Navbar() {
           <span className="text">MovieZ</span>
         </Link>
       </h2>
+      <InputSearch />
       <div className="third__visibility__hidden">
         <a href="https://github.com/andrejue" target="_blank" rel="noreferrer">
           Github Code

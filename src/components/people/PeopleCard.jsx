@@ -1,10 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import "./People.scss";
-import { string } from "prop-types";
 
 export default function People({ people, title }) {
-  console.log(people);
   const person = people.filter((person) => {
     if (person.profile_path != null) {
       return person;
@@ -13,7 +12,6 @@ export default function People({ people, title }) {
     }
   });
 
-  console.log(person);
   return (
     <section className="people__container">
       <div>
@@ -21,18 +19,20 @@ export default function People({ people, title }) {
       </div>
       <div className="person__carousel">
         {person.map((person) => {
-          const { name, profile_path } = person;
+          const { id, name, profile_path } = person;
 
           return (
-            <div className="people__card" key={person.id}>
-              <img
-                src={`https://image.tmdb.org/t/p/w500/${profile_path}`}
-                alt="Profile picture"
-              />
-              <div className="people__name">
-                <h4>{name}</h4>
+            <Link to={`/person/${id}`} key={person.id}>
+              <div className="people__card">
+                <img
+                  src={`https://image.tmdb.org/t/p/w500/${profile_path}`}
+                  alt="Profile picture"
+                />
+                <div className="people__name">
+                  <h4>{name}</h4>
+                </div>
               </div>
-            </div>
+            </Link>
           );
         })}
       </div>
