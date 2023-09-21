@@ -6,7 +6,7 @@ import { FaChevronCircleRight } from "react-icons/fa";
 import "./SerieCard.scss";
 import { Link } from "react-router-dom";
 
-export default function SerieieCard({ series, type }) {
+export default function SerieieCard({ series, type, title }) {
   const sortedSeries = series
     .slice()
     .sort((a, b) => b.popularity - a.popularity);
@@ -25,7 +25,7 @@ export default function SerieieCard({ series, type }) {
 
   return (
     <section className="card__carousel__top__movies">
-      <h2 className="top__movies__title">Top TV Series</h2>
+      <h2 className="top__movies__title">{title}</h2>
       <div className="card__container" ref={carousel}>
         {sortedSeries.map((serie) => {
           const { id, vote_average, poster_path, name, first_air_date } = serie;

@@ -11,7 +11,7 @@ export default function Genre() {
 
   const [items, setItems] = useState([]);
 
-  const getPersonInfo = async (url) => {
+  const getGenreInfo = async (url) => {
     try {
       const res = await fetch(url);
       const data = await res.json();
@@ -27,7 +27,7 @@ export default function Genre() {
     const url = `${findByGenreUrl}${type}?${apiKey}&with_genres=${id}`;
 
     console.log(url);
-    getPersonInfo(url);
+    getGenreInfo(url);
   }, []);
 
   return (

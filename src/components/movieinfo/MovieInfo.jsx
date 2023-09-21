@@ -88,9 +88,9 @@ export default function MovieInfo() {
 
       const first3Actors = first3ActorsArray.map((actor) => {
         return (
-          <div className="actor" key={actor.id}>
+          <Link to={`/person/${actor.id}`} className="actor" key={actor.id}>
             {actor.name}
-          </div>
+          </Link>
         );
       });
       setMovieDirector(director[0]);

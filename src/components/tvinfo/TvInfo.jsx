@@ -95,11 +95,12 @@ export default function TvInfo() {
 
       const first3Actors = first3ActorsArray.map((actor) => {
         return (
-          <div className="actor" key={actor.id}>
+          <Link to={`/person/${actor.id}`} className="actor" key={actor.id}>
             {actor.name}
-          </div>
+          </Link>
         );
       });
+
       setMovieDirector(director[0]);
       setMovieActors(first3Actors);
     } catch (error) {
@@ -112,7 +113,6 @@ export default function TvInfo() {
       const res = await fetch(url);
       const data = await res.json();
 
-      console.log(data);
       if (data.results.length > 0) {
         const trailer = data.results.filter((video) => {
           if (
